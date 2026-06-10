@@ -1,0 +1,21 @@
+teams_ls = ['GER', 'PAR', 'FRA', 'SWE', 'MEX', 'CAN', 'JPN', 'MAR',
+ 'COL', 'CRO', 'ESP', 'ALG', 'USA', 'AUT', 'BEL', 'RSA',
+ 'BRA', 'NED', 'CIV', 'NOR', 'KOR', 'ECU', 'ENG', 'SEN',
+ 'ARG', 'URU', 'TUR', 'IRN', 'SUI', 'NZL', 'POR', 'GHA']
+
+matches_ls = [["GER","PAR"],
+              ["FRA","SWE"],
+              ["MEX","CAN"],
+              ["JPN","MAR"],
+              ["COL","CRO"],
+              ["ESP","ALG"],
+              ["USA","AUT"],
+              ["BEL","RSA"],
+              ["BRA","NED"],
+              ["CIV","NOR"],
+              ["KOR","ECU"],
+              ["ENG","SEN"],
+              ["ARG","URU"],
+              ["TUR","IRN"],
+              ["SUI","NZL"],
+              ["POR","GHA"]]
