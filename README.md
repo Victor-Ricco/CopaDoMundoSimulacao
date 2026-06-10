@@ -85,12 +85,11 @@ src/
 │
 ├── main.py
 ├── MainDb.py
+├── banco.db
 │
 └── model/
     ├── partidas.py
-│
-└── util/
-    ├── resetInitDb.py
+
 ```
 
 ---
