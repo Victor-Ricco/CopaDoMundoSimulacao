@@ -1,5 +1,9 @@
 import MainDb
-import models.partidas
+import model.partidas
+
+#resetar e inicializar um novo um novo banco
+MainDb.reset()
+MainDb.initDb()
 
 #Cores para o terminal
 colors = {
@@ -12,7 +16,7 @@ colors = {
     "reset": "\033[0m"
 }
 
-partida = models.partidas.partida
+partida = model.partidas.partida
 
 #lista de times iniciais da fase 16 avos
 timesIniciais = MainDb.teams
