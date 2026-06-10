@@ -12,8 +12,7 @@ def initDb():
 
     cursor.executescript("""
             CREATE TABLE IF NOT EXISTS equipes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome_time TEXT NOT NULL,
+                nome_time TEXT PRIMARY KEY,
                 gols_pro INTEGER DEFAULT 0,
                 gols_contra INTEGER DEFAULT 0
             );
@@ -25,22 +24,22 @@ def initDb():
 
             CREATE TABLE IF NOT EXISTS equipe_partidas (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                equipe_id INTEGER NOT NULL,
+                equipe_nome TEXT NOT NULL,
                 partida_id INTEGER NOT NULL,
 
-                FOREIGN KEY (equipe_id) REFERENCES equipes(id),
+                FOREIGN KEY (equipe_nome) REFERENCES equipes(nome_time),
                 FOREIGN KEY (partida_id) REFERENCES partidas(id)
             );
 
             CREATE TABLE IF NOT EXISTS resultados (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 partida_id INTEGER NOT NULL,
-                ganhador_id INTEGER NOT NULL,
-                perdedor_id INTEGER NOT NULL,
+                ganhador_id TEXT NOT NULL,
+                perdedor_id TEXT NOT NULL,
 
                 FOREIGN KEY (partida_id) REFERENCES partidas(id),
-                FOREIGN KEY (ganhador_id) REFERENCES equipes(id),
-                FOREIGN KEY (perdedor_id) REFERENCES equipes(id)
+                FOREIGN KEY (ganhador_id) REFERENCES equipes(nome_time),
+                FOREIGN KEY (perdedor_id) REFERENCES equipes(nome_time)
             );
         """)
 
@@ -56,6 +55,132 @@ def initDb():
 def reset():
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM equipes")
+    cursor.executescript("""
+    DROP TABLE IF EXISTS resultados;
+    DROP TABLE IF EXISTS equipe_partidas;
+    DROP TABLE IF EXISTS partidas;
+    DROP TABLE IF EXISTS equipes;
+    """)
     conn.commit()
     conn.close()
+    
+def atualizarGols(golsPro, golsContra, Equipe):
+    conn = sqlite3.connect("banco.db")
+    cursor = conn.cursor()
+    
+    cursor.execute(
+    """
+    UPDATE equipes
+    SET
+        gols_pro = gols_pro + ?,
+        gols_contra = gols_contra + ?
+    WHERE nome_time = ?
+    """,
+    (golsPro, golsContra, Equipe)
+    )
+    conn.commit()
+    conn.close()
+    
+def inserirPartidas(fase, equipe1, equipe2):
+    conn = sqlite3.connect("banco.db")
+    cursor = conn.cursor()
+
+    # Cria a partida
+    cursor.execute(
+        "INSERT INTO partidas (fase) VALUES (?)",
+        (fase,)
+    )
+
+    partida_id = cursor.lastrowid
+
+    # Relaciona equipe 1
+    cursor.execute(
+        """
+        INSERT INTO equipe_partidas (equipe_nome, partida_id)
+        VALUES (?, ?)
+        """,
+        (equipe1, partida_id)
+    )
+
+    # Relaciona equipe 2
+    cursor.execute(
+        """
+        INSERT INTO equipe_partidas (equipe_nome, partida_id)
+        VALUES (?, ?)
+        """,
+        (equipe2, partida_id)
+    )
+
+    conn.commit()
+    conn.close()
+    return partida_id
+
+def inserirResultados(partidaId, ganhador, perdedor):
+    conn = sqlite3.connect("banco.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        INSERT INTO resultados (partida_id, ganhador_id, perdedor_id)
+        VALUES (?, ?, ?)
+        """,
+        (partidaId, ganhador, perdedor)
+    )
+    conn.commit()
+    conn.close()
+
+
+# Qual equipe marcou mais gols na competição?
+def ConsultarMaiorGoleador():
+    conn = sqlite3.connect("banco.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT nome_time, gols_pro
+        FROM equipes
+        WHERE gols_pro = (
+            SELECT MAX(gols_pro)
+            FROM equipes
+        )
+    """)
+
+    resultado = cursor.fetchall()
+
+    conn.close()
+
+    return resultado
+    
+# Qual equipe sofreu menos gols na competição?
+def ConsultarEquipeMenosGols():
+    conn = sqlite3.connect("banco.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT nome_time, gols_contra
+        FROM equipes
+        WHERE gols_contra = (
+            SELECT MIN(gols_contra)
+            FROM equipes
+        )
+    """)
+
+    resultado = cursor.fetchall()
+
+    conn.close()
+
+    return resultado
+    
+# Quantas partidas foram disputadas em cada fase?
+def ConsultarPartidasFases():
+    conn = sqlite3.connect("banco.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT fase, COUNT(*) as total
+        FROM partidas
+        GROUP BY fase
+        ORDER BY total DESC
+    """)
+    
+    resultado = cursor.fetchall()
+
+    conn.close()
+
+    return resultado
+    
