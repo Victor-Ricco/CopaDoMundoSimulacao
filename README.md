@@ -83,12 +83,16 @@ Cada partida gera automaticamente um classificado para a próxima fase.
 ```text
 src/
 │
-├── main.py
-├── MainDb.py
-├── banco.db
-│
 └── model/
     ├── partidas.py
+│
+└── tests/
+    ├── validations.py
+│
+├── main.py
+├── MainDb.py
+│
+
 
 ```
 
@@ -98,7 +102,9 @@ src/
 
 * Python
 * SQLite3
-* Random (biblioteca padrão)
+* random (biblioteca padrão)
+* loggin (biblioteca padrão)
+* sys (biblioteca padrão)
 
 ---
 
@@ -148,6 +154,8 @@ Exibe quantas partidas ocorreram em cada fase do torneio.
 * Em caso de empate, o vencedor é escolhido aleatoriamente.
 * Os gols marcados e sofridos são acumulados durante toda a competição.
 * Todos os resultados são persistidos no banco SQLite.
+* Nao e permitido times duplicados
+* Formatacao deve serguir o padrao de sigla com 3 letras para cada time
 
 ---
 

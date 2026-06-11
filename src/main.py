@@ -1,5 +1,6 @@
 import MainDb
 import model.partidas
+import tests.validations
 
 #resetar e inicializar um novo um novo banco
 MainDb.reset()
@@ -16,8 +17,6 @@ colors = {
     "reset": "\033[0m"
 }
 
-partida = model.partidas.partida
-
 #lista de times iniciais da fase 16 avos
 timesIniciais = MainDb.teams
 
@@ -30,6 +29,8 @@ def listaParaDuelos(equipes):
     
     return duelos
 
+#importa a classe partida em partidas.py
+partida = model.partidas.partida
 
 def resultadoDuelos(equipes, fase):
     vencedores = []
@@ -42,6 +43,9 @@ def resultadoDuelos(equipes, fase):
     return vencedores
 
 def iniciarCopaDoMundo():
+    #validar dados antes de comecar
+    tests.validations.validacoes(timesIniciais)
+    
     #16 avos
     print(f"{colors['blue']}\n====FASE 16 AVOS====\n{colors['reset']}")
     resultado16Avos = resultadoDuelos(timesIniciais, "16 avos")

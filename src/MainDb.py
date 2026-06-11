@@ -1,11 +1,14 @@
 import sqlite3
 
+#lista dos 36 times participantes do torneio
 teams = [
     'GER', 'PAR', 'FRA', 'SWE', 'MEX', 'CAN', 'JPN', 'MAR',
     'COL', 'CRO', 'ESP', 'ALG', 'USA', 'AUT', 'BEL', 'RSA',
     'BRA', 'NED', 'CIV', 'NOR', 'KOR', 'ECU', 'ENG', 'SEN',
     'ARG', 'URU', 'TUR', 'IRN', 'SUI', 'NZL', 'POR', 'GHA'
 ]
+
+#Inicializacao do banco
 def initDb():
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -51,7 +54,8 @@ def initDb():
         
     conn.commit()
     conn.close()
-    
+
+#Reset do banco
 def reset():
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -63,7 +67,8 @@ def reset():
     """)
     conn.commit()
     conn.close()
-    
+
+#Atualizar a quantidade de gols feito por cada pais por partida
 def atualizarGols(golsPro, golsContra, Equipe):
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -80,7 +85,8 @@ def atualizarGols(golsPro, golsContra, Equipe):
     )
     conn.commit()
     conn.close()
-    
+
+#Inserir cada partida no banco e relaciona-la com suas respectivas equipes
 def inserirPartidas(fase, equipe1, equipe2):
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -115,6 +121,7 @@ def inserirPartidas(fase, equipe1, equipe2):
     conn.close()
     return partida_id
 
+#Inserir resultado final das partidas
 def inserirResultados(partidaId, ganhador, perdedor):
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -128,6 +135,7 @@ def inserirResultados(partidaId, ganhador, perdedor):
     conn.commit()
     conn.close()
 
+#====INFORMACOES E ESTATISTICAS====
 
 # Qual equipe marcou mais gols na competição?
 def ConsultarMaiorGoleador():
