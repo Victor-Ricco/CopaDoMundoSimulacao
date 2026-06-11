@@ -81,6 +81,7 @@ Cada partida gera automaticamente um classificado para a próxima fase.
 ## 📂 Estrutura do Projeto
 
 ```text
+├── banco.db
 src/
 │
 └── model/
