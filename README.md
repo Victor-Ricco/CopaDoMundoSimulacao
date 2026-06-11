@@ -81,11 +81,11 @@ Cada partida gera automaticamente um classificado para a próxima fase.
 ## 📂 Estrutura do Projeto
 
 ```text
+├── banco.db
 src/
 │
 ├── main.py
 ├── MainDb.py
-├── banco.db
 │
 └── model/
     ├── partidas.py
